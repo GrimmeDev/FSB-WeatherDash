@@ -25,15 +25,15 @@
         <h1>Weather Dashboard</h1>
     </header>
     <div class="container-fluid">
-        <div class="row m-2">
+        <div class="row">
             <!-- Left side bar -->
             <!-- Search for a city w/ button and icon -->
             <!-- Below search results appear, made as buttons -->
-            <div class="col-lg-3 border border-dark p-1">
-                <div class="form-group mb-3">
-                    <label for="CitySearch">Search for a City:</label>
+            <div class="col-lg-3 p-1">
+                <label for="CitySearch">Search for a City:</label>
+                <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="City Name" aria-label="CitySearch"
-                        aria-describedby="button-addon2">
+                        aria-describedby="button-addon2" id="searchInput">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="button" id="searchButton"><svg width="1em" height="1em"
                                 viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
@@ -45,15 +45,87 @@
                             </svg></button>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col" id="cityList">
+                    </div>
+                </div>
             </div>
-            <!-- Right side 2 rows -->
-            <!-- Row 1: Current Day results -->
-            <!-- Row 2: 5 Day Forecast -->
-            <div class="col-lg-9 border border-dark"></div>
+            <div class="col-lg-9">
+                <div class="jumbotron jumbotron-fluid m-2">
+                    <div class="container" id="mainDisplay">
+                        <h1 class="display-4" id="cityAndDay">City Result</h1>
+                        <p id="tempF">Temp-F</p>
+                        <p id="humid">Humidity-%</p>
+                        <p id="wind">Wind Speed - MPH</p>
+                        <p id="uvIndex">UV Index</p>
+                    </div>
+                </div>
+                <div class="row" id="forecast">
+                    <!-- <div class="col" id="day1">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title" id="date+1">Card title</h5>
+                                <img src="https://via.placeholder.com/50" alt="">
+                                <p id="date+1Temp">Testing Temp-F</p>
+                                <p id="date+1Humid">Testing Humidity</p>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col" id="day2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk of the card's content.</p>
+                                <a href="#" class="card-link">Card link</a>
+                                <a href="#" class="card-link">Another link</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col" id="day3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk of the card's content.</p>
+                                <a href="#" class="card-link">Card link</a>
+                                <a href="#" class="card-link">Another link</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col" id="day4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk of the card's content.</p>
+                                <a href="#" class="card-link">Card link</a>
+                                <a href="#" class="card-link">Another link</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col" id="day5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk of the card's content.</p>
+                                <a href="#" class="card-link">Card link</a>
+                                <a href="#" class="card-link">Another link</a>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
         </div>
     </div>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./Pages/mainScript.js"></script>
 </body>
 
