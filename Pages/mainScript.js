@@ -48,11 +48,45 @@ function findCity(city) {
                     <p>Temperature: ${city.main.temp}</p>
                     <p>Humidity: ${city.main.humidity} F</p>            
                     <p>Wind Speed: ${city.wind.speed} MPH</p>
-                    <p>UV Index: ${cityUV.value}</p>
+                    <p id="uvDisplay">UV Index: <span class='badge'></p>
                 `);
+                // if/else chain dictating span class for coloring based off of index number
+                // <span class="badge badge-secondary">
+                if (cityUV.value < 2) {
+                    // color green
+                    console.log("Color: green");
+                    var uvScale = $("<span class='badge uv-Low'>");
+                    // $(".badge").addClass("uv-Low");
+                }
+                else if (cityUV.value < 5) {
+                    // color yellow
+                    console.log("Color: yellow");
+                    var uvScale = $("<span class='badge uv-Mod'>");
+                    // $(".badge").addClass("uv-Mod");
+                }
+                else if (cityUV.value < 7) {
+                    // color orange
+                    console.log("Color: orange");
+                    var uvScale = $("<span class='badge badge-warning'>");
+                    // $(".badge").addClass("badge-warning");
+                }
+                else if (cityUV.value < 10) {
+                    // color red
+                    console.log("Color: red");
+                    var uvScale = $("<span class='badge badge-danger'>");
+                    // $(".badge").addClass("badge-danger");
+                }
+                else {
+                    // color purple
+                    console.log("Color: purple");
+                    var uvScale = $("<span class='badge uv-Ext'>");
+                    // $(".badge").addClass("uv-Ext");
+                }
                 // Clears the jumbotron of default elements/text, appends element to it
                 $("#mainDisplay").empty();
                 $("#mainDisplay").append(element);
+                $(".badge").text(cityUV.value);
+                $(".uvDisplay").append(uvScale);
 
 
                 // For(?) loop looping through object array of forecast data
@@ -69,7 +103,7 @@ function findCity(city) {
 
                     // Loops through and finds if the dt_text has NOON
                     if (cityFore.list[i].dt_txt.includes("12:00:00")) {
-                        targetDay=moment(targetDay).format("DD/MM/YYYY")
+                        targetDay = moment(targetDay).format("DD/MM/YYYY")
                         var iconCode = cityFore.list[i].weather[0].icon;
                         // // console.log(iconCode);
                         // var iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
