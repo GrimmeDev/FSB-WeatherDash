@@ -2,3 +2,13 @@ header{
     background-color: rgb(71, 71, 71);
     color: #eee;
 }
+
+.uv-Low{
+    background-color: rgb(83, 179, 83);
+}
+.uv-Mod{
+    background-color: rgb(223, 223, 0);
+}
+.uv-Ext{
+    background-color: purple;
+}
