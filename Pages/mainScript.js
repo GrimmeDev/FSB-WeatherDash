@@ -26,7 +26,7 @@ function findCity(city) {
             url: queryURL,
             method: "GET"
         }).then(function (cityFore) {
-            console.log(cityFore);
+            // console.log(cityFore);
             //#region Current Weather
             var iconCode = city.weather[0].icon;
             var altIcon = city.weather[0].description;
