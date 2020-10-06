@@ -10,10 +10,7 @@ var userCity = "";
 function findCity(city) {
     // api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
     var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${weatherAPIKey}`;
-    var searchedCity = city;
-    // console.log(searchedCity);
     // generate button of city containing text name of the city
-
 
     $.ajax({
         url: queryURL,
@@ -22,111 +19,105 @@ function findCity(city) {
         // create clickable button of city inside of
         // console.log(city);
 
-        // UV Index (seperate call)
-        // http://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid={API key}
-        queryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${city.coord.lat}&lon=${city.coord.lon}&appid=${weatherAPIKey}`;
-
+        // 5Day AND UV Index (seperate call)
+        // api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
+        queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${city.coord.lat}&lon=${city.coord.lon}&units=imperial&exclude=current,minutely,hourly,alerts&appid=${weatherAPIKey}`;
         $.ajax({
             url: queryURL,
             method: "GET"
-        }).then(function (cityUV) {
-            // console.log("UV Function Ran");
-            // console.log(cityUV);
-
-            // 5Day (seperate call)
-            // api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
-            queryURL = `https://api.openweathermap.org/data/2.5/forecast?q=${searchedCity}&units=imperial&appid=${weatherAPIKey}`;
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            }).then(function (cityFore) {
-                console.log(cityFore);
-
-                // Creates element with auto formating to be displayed inside the jumbotron
-                var element = $(`
-                    <h1>${city.name + moment().format(" (DD/MM/YY)")}</h2>
+        }).then(function (cityFore) {
+            console.log(cityFore);
+            //#region Current Weather
+            var iconCode = city.weather[0].icon;
+            var altIcon = city.weather[0].description;
+            var iconURL = `http://openweathermap.org/img/w/${iconCode}.png`
+            // Creates element with auto formating to be displayed inside the jumbotron
+            var element = $(`
+                    <h1>${city.name + moment().format(" (DD/MM/YY)")}
+                    <img src="${iconURL}" alt="${altIcon}"></h1>
                     <p>Temperature: ${city.main.temp}</p>
                     <p>Humidity: ${city.main.humidity} F</p>            
                     <p>Wind Speed: ${city.wind.speed} MPH</p>
-                    <p id="uvDisplay">UV Index: <span class='badge'></p>
+
                 `);
-                // if/else chain dictating span class for coloring based off of index number
-                // <span class="badge badge-secondary">
-                if (cityUV.value < 2) {
-                    // color green
-                    console.log("Color: green");
-                    var uvScale = $("<span class='badge uv-Low'>");
-                    // $(".badge").addClass("uv-Low");
-                }
-                else if (cityUV.value < 5) {
-                    // color yellow
-                    console.log("Color: yellow");
-                    var uvScale = $("<span class='badge uv-Mod'>");
-                    // $(".badge").addClass("uv-Mod");
-                }
-                else if (cityUV.value < 7) {
-                    // color orange
-                    console.log("Color: orange");
-                    var uvScale = $("<span class='badge badge-warning'>");
-                    // $(".badge").addClass("badge-warning");
-                }
-                else if (cityUV.value < 10) {
-                    // color red
-                    console.log("Color: red");
-                    var uvScale = $("<span class='badge badge-danger'>");
-                    // $(".badge").addClass("badge-danger");
-                }
-                else {
-                    // color purple
-                    console.log("Color: purple");
-                    var uvScale = $("<span class='badge uv-Ext'>");
-                    // $(".badge").addClass("uv-Ext");
-                }
-                // Clears the jumbotron of default elements/text, appends element to it
-                $("#mainDisplay").empty();
-                $("#mainDisplay").append(element);
-                $(".badge").text(cityUV.value);
-                $(".uvDisplay").append(uvScale);
+            //#endregion
+            // if/else chain dictating span class for coloring based off of index number
+            // <span class="badge badge-secondary">
+            //#region Current UV
+            var uVI = cityFore.daily[0].uvi
+            if (uVI < 2) {
+                // color green
+                // console.log("Color: green");
+                var uvScale = $("<span class='badge uv-Low'>");
+                // $(".badge").addClass("uv-Low");
+            }
+            else if (uVI < 5) {
+                // color yellow
+                // console.log("Color: yellow");
+                var uvScale = $("<span class='badge uv-Mod'>");
+                // $(".badge").addClass("uv-Mod");
+            }
+            else if (uVI < 7) {
+                // color orange
+                // console.log("Color: orange");
+                var uvScale = $("<span class='badge badge-warning'>");
+                // $(".badge").addClass("badge-warning");
+            }
+            else if (uVI < 10) {
+                // color red
+                // console.log("Color: red");
+                var uvScale = $("<span class='badge badge-danger'>");
+                // $(".badge").addClass("badge-danger");
+            }
+            else {
+                // color purple
+                // console.log("Color: purple");
+                var uvScale = $("<span class='badge uv-Ext'>");
+                // $(".badge").addClass("uv-Ext");
+            }
+            //#endregion
+            // Clears the jumbotron of default elements/text, appends element to it
+            $("#mainDisplay").empty();
+            $("#mainDisplay").append(element);
+            $("#mainDisplay").append($("<p id='uvDisplay'>").text("UV Index: "));
+            $("#uvDisplay").append(uvScale.text(uVI));
 
-
-                // For(?) loop looping through object array of forecast data
-                // parse out date/time(?) to only display noon temperatures?
-                var curDay = moment().format("YYYY-MM-DD") + " 12:00:00";
-                // console.log(curDay);
-                forecastDisplay.empty();
-                for (var i = 0; i < cityFore.list.length; i++) {
-                    // Array day/time displayed: YYYY-MM-DD HH:MM:SS (military)
-                    var targetDay = moment(curDay).add((i + 1), 'd')// + " 12:00:00";
-                    targetDay = moment(targetDay).format("YYYY-MM-DD");
-                    targetDayTime = targetDay + " 12:00:00";
-                    // console.log(i + ": " + targetDayTime);
-
-                    // Loops through and finds if the dt_text has NOON
-                    if (cityFore.list[i].dt_txt.includes("12:00:00")) {
-                        targetDay = moment(targetDay).format("DD/MM/YYYY")
-                        var iconCode = cityFore.list[i].weather[0].icon;
-                        // // console.log(iconCode);
-                        // var iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
-                        var iconURL = `http://openweathermap.org/img/w/${iconCode}@2x.png`
-                        // <img src="${iconURL}">
-                        var element = $(`
+            // For(?) loop looping through object array of forecast data
+            // parse out date/time(?) to only display noon temperatures?
+            //#region FiveDay Forecast
+            forecastDisplay.empty();
+            var curDay = moment().format("YYYY-MM-DD") + " 12:00:00";
+            for (var i = 1; i < 6; i++) {
+                // Array day/time displayed: YYYY-MM-DD HH:MM:SS (military)
+                var targetDay = moment(curDay).add((i), 'd')// + " 12:00:00";
+                targetDay = moment(targetDay).format("YYYY-MM-DD");
+                targetDayTime = targetDay + " 12:00:00";
+                // console.log(i + ": " + targetDayTime);
+                targetDay = moment(targetDay).format("DD/MM/YYYY")
+                iconCode = cityFore.daily[i].weather[0].icon;
+                altIcon = cityFore.daily[i].weather[0].description;
+                // // console.log(iconCode);
+                // var iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
+                iconURL = `http://openweathermap.org/img/w/${iconCode}.png`
+                // <img src="${iconURL}">
+                var element = $(`
                         <div class="col">
                             <div class="card bg-primary text-white">
                                 <div class="card-body">
                                     <h5>${targetDay}</h5>
-
-                                    <p>Temp: ${cityFore.list[i].main.temp} F</p>
-                                    <p>Humidity: ${cityFore.list[i].main.humidity} %</p>
+                                    <img src="${iconURL}" alt="${altIcon}">
+                                    <p>Temp: ${cityFore.daily[i].temp.day} F</p>
+                                    <p>Humidity: ${cityFore.daily[i].humidity} %</p>
                                 </div>
                             </div>
                         </div>                            
                         `);
-                        // Clears forecast display and appends element to it
-                        forecastDisplay.append(element);
-                    }
-                }
-            });
+                // appends element to forecastDisplay
+                forecastDisplay.append(element);
+            }
+            //#endregion
         });
+        // });
     });
 }
 //#endregion
@@ -146,6 +137,7 @@ $(document).on("click", "button", function () {
     }
     // make button with text of user input
     // prepend to cityList div
+    $("#searchInput").val("");
     findCity(userCity);
 });
 //#endregion
