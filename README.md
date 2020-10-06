@@ -17,6 +17,7 @@ Once a city has been searched a button linking to the city will be created on th
 The UV index of the current weather will be color coded based on severity, and the forecast will hav an icon representation of the weather
 
 #### Live website link:
-
+https://grimmedev.github.io/FSB-WeatherDash/
 
 #### Example image:
+![Weather Dashboard Example](./Assets/exampleImage.png)
