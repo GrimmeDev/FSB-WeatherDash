@@ -91,8 +91,8 @@ function findCity(city) {
                 // Array day/time displayed: YYYY-MM-DD HH:MM:SS (military)
                 var targetDay = moment(curDay).add((i), 'd')// + " 12:00:00";
                 targetDay = moment(targetDay).format("YYYY-MM-DD");
-                targetDayTime = targetDay + " 12:00:00";
-                // console.log(i + ": " + targetDayTime);
+                // targetDayTime = targetDay + " 12:00:00";
+                // // console.log(i + ": " + targetDayTime);
                 targetDay = moment(targetDay).format("DD/MM/YYYY")
                 iconCode = cityFore.daily[i].weather[0].icon;
                 altIcon = cityFore.daily[i].weather[0].description;
@@ -120,6 +120,13 @@ function findCity(city) {
         // });
     });
 }
+
+// make button with text of user input
+// prepend to cityList div
+function cityButton(userCity) {
+    var cityBtn = `<button class="btn-block btn btn-primary">${userCity}</button>`;
+    cityList.prepend(cityBtn);
+}
 //#endregion
 
 //#region Event Listeners
@@ -128,16 +135,25 @@ $(document).on("click", "button", function () {
     if ($(this).attr("id") == "searchButton") {
         // console.log($(this));
         userCity = $("#searchInput").val();
-        var cityBtn = `<button class="btn-block btn btn-primary">${userCity}</button>`;
-        cityList.prepend(cityBtn);
+        cityButton(userCity);
     }
     else {
         // console.log($(this));
         userCity = $(this).text();
     }
-    // make button with text of user input
-    // prepend to cityList div
+    // sets search field to be empty
     $("#searchInput").val("");
+    // sets searched city into local storage
+    localStorage.setItem("searchedCity", userCity);
     findCity(userCity);
 });
+$(document).ready(function () {
+    // checks to see if there was a previously searched city, if found makes a button and pulls up the info
+    // if not found, creates an empty local storage for use later
+    userCity = localStorage.getItem("searchedCity", userCity) || "";
+    if (userCity != "") {
+        cityButton(userCity);
+        findCity(userCity);
+    }
+})
 //#endregion
