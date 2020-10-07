@@ -147,6 +147,7 @@ $(document).on("click", "button", function () {
     localStorage.setItem("searchedCity", userCity);
     findCity(userCity);
 });
+
 $(document).ready(function () {
     // checks to see if there was a previously searched city, if found makes a button and pulls up the info
     // if not found, creates an empty local storage for use later
